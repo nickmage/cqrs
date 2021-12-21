@@ -35,14 +35,16 @@ public class WriteItemService {
 
     @Transactional
     public WriteItem updateWriteItem(Long id, WriteItem item) {
-        Long readItemToUpdateId = writeItemRepository.findById(id).orElseThrow(NullPointerException::new).getReadItem().getId();
+        Long readItemToUpdateId = writeItemRepository.findById(id)
+                .orElseThrow(NullPointerException::new).getReadItem().getId();
         ReadItem readItemToUpdate = convertWriteItemToReadItem(item);
         readItemToUpdate.setId(readItemToUpdateId);
         readItemRepository.update(readItemToUpdate);
 
         item.setId(id);
         item.setReadItem(readItemToUpdate);
-        return writeItemRepository.update(item);//writeItemRepository.save(item); <- doesn't work (maybe it's a micronaut Crud repository implementation bug)
+        return writeItemRepository.update(item);
+        //writeItemRepository.save(item); <- doesn't work (maybe it's a micronaut Crud repository implementation bug)
     }
 
     @Transactional
